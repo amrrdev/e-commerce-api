@@ -21,7 +21,8 @@ function handleDuplicationErrorDB(error) {
 }
 
 export default (err, req, res, next) => {
-  const error = { ...err };
+  const error = structuredClone(err);
+
   error.statusCode ||= StatusCodes.INTERNAL_SERVER_ERROR;
   error.status ||= "error";
 
@@ -29,6 +30,8 @@ export default (err, req, res, next) => {
 
   if (error.code && error.code === 11000)
     error = handleDuplicationErrorDB(error);
+
+  console.log(error.message);
 
   if (process.env.NODE_ENV === "development")
     res.status(error.statusCode).json({
