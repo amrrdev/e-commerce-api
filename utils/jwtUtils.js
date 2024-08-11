@@ -26,3 +26,7 @@ export const attachCookiesToResponse = (res, payload) => {
     secure: process.env.NODE_ENV === "production",
   });
 };
+
+export const createJWTPayload = (user) => {
+  return { name: user.name, userId: user._id, role: user.role };
+};
