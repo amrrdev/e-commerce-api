@@ -1,6 +1,7 @@
 import globalErrorHandlerMiddleware from "./middlewares/globalErrorHandler.js";
 import notFoundMiddleware from "./middlewares/notFoundHandler.js";
 import authRouter from "./routers/authRoutes.js";
+import userRouter from "./routers/userRoutes.js";
 
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -18,13 +19,13 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
 app.get("/", (req, res) => {
-  // when i signed the cookie , the cookie will not available in req.cookie
-  // instead will be available in req.signedCookies
+  // When a cookie is signed, it will not be available in req.cookies.
+  // Instead, it will be available in req.signedCookies.
 
-  console.log(req.signedCookies);
   res.send("<h1>e-commerce</h1>");
 });
 
+app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
 
 app.use(notFoundMiddleware);
