@@ -1,6 +1,7 @@
 import globalErrorHandlerMiddleware from "./middlewares/globalErrorHandler.js";
 import notFoundMiddleware from "./middlewares/notFoundHandler.js";
 import productRouter from "./routers/productRoutes.js";
+import reviewRouter from "./routers/reviewRoutes.js";
 import authRouter from "./routers/authRoutes.js";
 import userRouter from "./routers/userRoutes.js";
 
@@ -41,9 +42,11 @@ app.get("/", (req, res) => {
   res.send("<h1>e-commerce</h1>");
 });
 
-app.use("/api/v1/products", productRouter);
-app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/products", productRouter);
+app.use("/api/v1/reviews", reviewRouter);
+
 app.use(notFoundMiddleware);
 
 app.use(globalErrorHandlerMiddleware);
