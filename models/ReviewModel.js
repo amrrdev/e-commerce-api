@@ -38,5 +38,44 @@ const ReviewSchema = new mongoose.Schema(
 // MongoDB will enforce this constraint and return an error.
 ReviewSchema.index({ user: 1, product: 1 }, { unique: true });
 
+ReviewSchema.statics.calculateAverageRating = async function (productId) {
+  const result = await this.aggregate([
+    {
+      $match: { product: productId },
+    },
+    {
+      $group: {
+        _id: null,
+        averageRating: { $avg: "$rating" },
+        numberOfReviews: { $sum: 1 },
+      },
+    },
+  ]);
+
+  try {
+    await this.model("Product").findByIdAndUpdate(productId, {
+      averageRating: result[0]?.averageRating || 0,
+      numberOfReviews: result[0]?.numberOfReviews || 0,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// for new documents Model.create()
+ReviewSchema.post("save", async function () {
+  await this.constructor.calculateAverageRating(this.product);
+});
+
+// findByIdAndDelete will trigger this middleware
+ReviewSchema.post("findOneAndUpdate", async function (doc) {
+  if (doc) await doc.constructor.calculateAverageRating(doc.product);
+});
+
+// findByIdAndDelete will trigger this middleware
+ReviewSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) await doc.constructor.calculateAverageRating(doc.product);
+});
+
 const Review = mongoose.model("Review", ReviewSchema);
 export default Review;
