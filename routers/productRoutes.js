@@ -1,5 +1,6 @@
 import * as productController from "./../controllers/productController.js";
 import * as authentication from "./../middlewares/authentication.js";
+import { getSingleProductReviews } from "../controllers/reviewController.js";
 
 import express from "express";
 
@@ -8,6 +9,9 @@ const router = express.Router();
 // Public routes
 router.route("/").get(productController.getAllProducts);
 router.route("/:id").get(productController.getSingleProduct);
+
+// /products/9390324/reviews
+router.route("/:id/reviews").get(getSingleProductReviews);
 
 // Routes that require authentication
 router.use(authentication.isAuthenticated);
