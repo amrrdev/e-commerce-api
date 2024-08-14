@@ -4,6 +4,7 @@ import productRouter from "./routers/productRoutes.js";
 import reviewRouter from "./routers/reviewRoutes.js";
 import authRouter from "./routers/authRoutes.js";
 import userRouter from "./routers/userRoutes.js";
+import orderRouter from "./routers/orderRoutes.js";
 
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -45,6 +46,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
+app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/reviews", reviewRouter);
 
 app.use(notFoundMiddleware);
